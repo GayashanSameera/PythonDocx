@@ -1,75 +1,60 @@
-import re
+import docx
+from pptx.util import Pt
+import time
 
-from docx import Document
-
-regex = re.compile("foo")
-
-
-def paragraph_replace_text(paragraph, regex, replace_str):
-    """Return `paragraph` after replacing all matches for `regex` with `replace_str`.
-
-    `regex` is a compiled regular expression prepared with `re.compile(pattern)`
-    according to the Python library documentation for the `re` module.
-    """
-    # --- a paragraph may contain more than one match, loop until all are replaced ---
-    while True:
-        text = paragraph.text
-        match = regex.search(text)
-        if not match:
-            break
-
-        # --- when there's a match, we need to modify run.text for each run that
-        # --- contains any part of the match-string.
-        runs = iter(paragraph.runs)
-        start, end = match.start(), match.end()
-
-        # --- Skip over any leading runs that do not contain the match ---
-        for run in runs:
-            run_len = len(run.text)
-            if start < run_len:
-                break
-            start, end = start - run_len, end - run_len
-
-        # --- Match starts somewhere in the current run. Replace match-str prefix
-        # --- occurring in this run with entire replacement str.
-        run_text = run.text
-        run_len = len(run_text)
-        run.text = "%s%s%s" % (run_text[:start], replace_str, run_text[end:])
-        end -= run_len  # --- note this is run-len before replacement ---
-
-        # --- Remove any suffix of match word that occurs in following runs. Note that
-        # --- such a suffix will always begin at the first character of the run. Also
-        # --- note a suffix can span one or more entire following runs.
-        for run in runs:  # --- next and remaining runs, uses same iterator ---
-            if end <= 0:
-                break
-            run_text = run.text
-            run_len = len(run_text)
-            run.text = run_text[end:]
-            end -= run_len
-
-    # --- optionally get rid of any "spanned" runs that are now empty. This
-    # --- could potentially delete things like inline pictures, so use your judgement.
-    # for run in paragraph.runs:
-    #     if run.text == "":
-    #         r = run._r
-    #         r.getparent().remove(r)
-
-    return paragraph
+start_time = time.perf_counter ()
+doc = docx.Document()
+doc.add_heading('gayashan', 0)
+data = (
+	(1, 'gaya 1'),
+	(2, 'gaya 2'),
+	(3, 'gaya 3'),
+    (1, 'gaya 4'),
+	(2, 'gaya 5'),
+	(3, 'gaya 6'),
+    (1, 'gaya 7'),
+	(2, 'gaya 8'),
+	(3, 'gaya 9'),
+    (1, 'gaya 10'),
+    (1, 'gaya 11'),
+	(2, 'gaya 12'),
+	(3, 'gaya 13'),
+    (1, 'gaya 14'),
+	(2, 'gaya 15'),
+	(3, 'gaya 16'),
+    (1, 'gaya 17'),
+	(2, 'gaya 18'),
+	(3, 'gaya 19'),
+    (1, 'gaya 20')
+)
+i = 0
+while i < 1500:
+    table = doc.add_table(rows=1, cols=6, style='Colorful List')
+    row = table.rows[0].cells
+    row[0].text = 'Id'
+    row[1].text = 'Name'
+    row[2].text = 'aaa'
+    row[3].text = 'bbbb'
+    row[4].text = 'cccc'
+    row[5].text = 'dddd'
 
 
-if __name__ == "__main__":
-    document = Document()
-    paragraph = document.add_paragraph()
-    paragraph.add_run("f").bold = True
-    paragraph.add_run("o").bold = True
-    paragraph.add_run("o to").bold = True
-    paragraph.add_run(" you and ")
-    paragraph.add_run("foo").bold = True
-    paragraph.add_run(" to the horse")
-    paragraph_replace_text(paragraph, regex, "bar")
+    for id, name in data:
+        row = table.add_row().cells
+        row[0].text = str(id)
+        row[1].text = "name"
+        row[2].text = "name 1"
+        row[3].text = "nam  2"
+        row[3].text = "name 3"
+        row[4].text = name
 
-    import pprint
-    pprint.pprint(list(r.text for r in paragraph.runs))
 
->>> ['bar', ' to', ' you and ', 'bar', ' to the horse']
+    paragraph = doc.add_paragraph(' ')
+    paragraph.paragraph_format.space_before = Pt(3)
+    paragraph.paragraph_format.space_after = Pt(5)
+    i += 1
+
+
+doc.save('output.docx')
+end_time = time.perf_counter ()
+print(end_time - start_time, "seconds")
