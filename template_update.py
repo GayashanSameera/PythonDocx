@@ -86,7 +86,7 @@ if __name__ == '__main__':
             'var4': 'LGIM/Client user',
             'var5': "+972-5056000000",
             'var6': "example@example.com",
-            'var7': 'Active Client page – External assets',
+            'var7': 'assets',
             'var8': 'Information button text',
             'var10': "03 Jan, 2022",
             'var11': "10,000",

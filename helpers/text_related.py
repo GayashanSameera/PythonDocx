@@ -71,30 +71,30 @@ def add_paragraph(doc, text, option):
 
 def replace_txt(document, replacements):
     for paragraph in document.paragraphs:
-        pattern = r'\+\+\+INS (.*?) \+\+\+'
+        pattern = r'\<PT (.*?) \>'
         matches = get_tag_content(pattern, paragraph)
         for match in matches:
             object_value = pydash.get(replacements, match)
-            replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+            replace_tags(str(f"<PT {match} >"), str(object_value), paragraph)
 
     for section in document.sections:
         footer = section.footer
         header = section.header
         for paragraph in footer.paragraphs:
-            pattern = r'\+\+\+INS (.*?) \+\+\+'
+            pattern = r'\<PT (.*?) \>'
             matches = get_tag_content(pattern, paragraph)
 
             for match in matches:
                 object_value = pydash.get(replacements, match)
-                replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+                replace_tags(str(f"<PT {match} >"), str(object_value), paragraph)
 
         for paragraph in header.paragraphs:
-            pattern = r'\+\+\+INS (.*?) \+\+\+'
+            pattern = r'\<PT (.*?) \>'
             matches = get_tag_content(pattern, paragraph)
 
             for match in matches:
                 object_value = pydash.get(replacements, match)
-                replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+                replace_tags(str(f"<PT {match} >"), str(object_value), paragraph)
 
     #how to replace tags inside table
     # for table in document.tables:
