@@ -4,37 +4,7 @@ from pptx.util import Pt
 from pptx.dml.color import RGBColor
 import copy
 
-def replace_text_in_paragraph(paragraph, key, value):
-    if key in paragraph.text:
-        inline = paragraph.runs
-        for item in inline:
-            if key in item.text:
-                item.text = item.text.replace(key, value)
-
-def replace_txt(replacements, document):
-    for paragraph in document.paragraphs:
-        for match, replacement in replacements.items():
-            replace_text_in_paragraph(paragraph, match, replacement)
-
-    for section in document.sections:
-        footer = section.footer
-        header = section.header
-        for paragraph in footer.paragraphs:
-            for match, replacement in replacements.items():
-                replace_text_in_paragraph(paragraph, match, replacement)
-
-        for paragraph in header.paragraphs:
-            for match, replacement in replacements.items():
-                replace_text_in_paragraph(paragraph, match, replacement)
-
-    #how to replace tags inside table
-    # for table in document.tables:
-    #     for row in table.rows:
-    #         for cell in row.cells:
-    #             for paragraph in cell.paragraphs:
-    #                 for match, replacement in replacements.items():
-    #                     replace_text_in_paragraph(paragraph, match, replacement)
-
+from handlers.handle_tags import handle_tags
 
 def add_data_to_table(table):
     data = (
@@ -110,18 +80,20 @@ if __name__ == '__main__':
     doc = Document('input.docx')
     dataDump = {
         "text_replaces":  {
-            '{{var1}}': "Example Name",
-            '{{var2}}': 'External asset workflow',
-            '{{var3}}': "302929393",
-            '{{var4}}': 'LGIM/Client user',
-            '{{var5}}': "+972-5056000000",
-            '{{var6}}': "example@example.com",
-            '{{var7}}': 'Active Client page – External assets',
-            '{{var8}}': 'Information button text',
-            '{{var10}}': "03 Jan, 2022",
-            '{{var11}}': "10,000",
-            '{{var12}}': "3,000",
-            '{{var13}}':"7,000",
+            'var1': "Example Name",
+            'var2': 'External asset workflow',
+            'var3': "302929393",
+            'var4': 'LGIM/Client user',
+            'var5': "+972-5056000000",
+            'var6': "example@example.com",
+            'var7': 'Active Client page – External assets',
+            'var8': 'Information button text',
+            'var10': "03 Jan, 2022",
+            'var11': "10,000",
+            'var12': "3,000",
+            'var13':"7,000",
+            'spart': "sample text",
+            'scustomer': "sample custome"
             },
         "table_replaces": {
             "cashFlows":{
@@ -763,6 +735,8 @@ if __name__ == '__main__':
              
     }
 
-    replace_txt(dataDump["text_replaces"], doc)
-    update_table(dataDump["table_replaces"]["cashFlows"], doc)
+    handle_tags(doc,dataDump)
+
+    # replace_txt_tags(dataDump["text_replaces"], doc)
+    # update_table(dataDump["table_replaces"]["cashFlows"], doc)
     doc.save('output.docx')

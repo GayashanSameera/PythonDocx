@@ -1,5 +1,7 @@
 from docx import Document
+import pydash
 
+from helpers.utils import replace_tags, get_tag_content, get_tag_from_string
 
 def add_headings(doc, text, level):
     doc.add_heading(text, level)
@@ -47,8 +49,8 @@ def change_orientation_of_section(section):
     # Changing the orientation to landscape
     section.orientation = WD_ORIENT.LANDSCAPE #PORTRAIT
 
-def add_paragraph(doc, text, option)
-    Adding paragraph
+def add_paragraph(doc, text, option):
+    #Adding paragraph
     para = doc.add_paragraph(text)
 
     if(option == "page_break_before"):
@@ -66,3 +68,38 @@ def add_paragraph(doc, text, option)
     elif(option == "widow_control"):
         # Setting widow_control as True
         para.widow_control = True
+
+def replace_txt(document, replacements):
+    for paragraph in document.paragraphs:
+        pattern = r'\+\+\+INS (.*?) \+\+\+'
+        matches = get_tag_content(pattern, paragraph)
+        for match in matches:
+            object_value = pydash.get(replacements, match)
+            replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+
+    for section in document.sections:
+        footer = section.footer
+        header = section.header
+        for paragraph in footer.paragraphs:
+            pattern = r'\+\+\+INS (.*?) \+\+\+'
+            matches = get_tag_content(pattern, paragraph)
+
+            for match in matches:
+                object_value = pydash.get(replacements, match)
+                replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+
+        for paragraph in header.paragraphs:
+            pattern = r'\+\+\+INS (.*?) \+\+\+'
+            matches = get_tag_content(pattern, paragraph)
+
+            for match in matches:
+                object_value = pydash.get(replacements, match)
+                replace_tags(str(f"+++INS {match} +++"), str(object_value), paragraph)
+
+    #how to replace tags inside table
+    # for table in document.tables:
+    #     for row in table.rows:
+    #         for cell in row.cells:
+    #             for paragraph in cell.paragraphs:
+    #                 for match, replacement in replacements.items():
+    #                     replace_text_in_paragraph(paragraph, match, replacement)
