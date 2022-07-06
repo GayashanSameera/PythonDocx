@@ -31,3 +31,26 @@ def get_tag_from_string(pattern,string):
 
 def eval_executor(logic, replacements):
     return eval(logic,replacements)
+
+def find(datam, key , value):
+    for data in datam:
+        if(data and data[key] and data[key] == value ):
+            return data
+            break
+
+    return False
+
+def get_value_array_using_array_and_key(datam, key):
+    arr = []
+    for data in datam:
+        if(data and data[key]) :
+            arr.append(data[key])
+    return arr
+
+def get_value_array_of_keys_using_object(datam):
+    arr = []
+    for key,value in datam.items():
+        arr.append(key)
+    return arr
+
+
