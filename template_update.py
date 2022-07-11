@@ -782,6 +782,4 @@ if __name__ == '__main__':
 
     handle_tags(doc,dataDump)
 
-    # replace_txt_tags(dataDump["text_replaces"], doc)
-    # update_table(dataDump["table_replaces"]["cashFlows"], doc)
     doc.save('output.docx')

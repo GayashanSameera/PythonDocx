@@ -43,8 +43,12 @@ def find(datam, key , value):
 def get_value_array_using_array_and_key(datam, key):
     arr = []
     for data in datam:
-        if(data and data[key]) :
-            arr.append(data[key])
+        try:
+            if(data and data[key]) :
+                arr.append(data[key])
+        except:
+            print("An exception occurred")
+        
     return arr
 
 def get_value_array_of_keys_using_object(datam):

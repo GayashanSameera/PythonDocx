@@ -69,13 +69,13 @@ def add_paragraph(doc, text, option):
         # Setting widow_control as True
         para.widow_control = True
 
-def replace_txt(document, replacements):
-    for paragraph in document.paragraphs:
-        pattern = r'\<PT (.*?) \>'
-        matches = get_tag_content(pattern, paragraph)
-        for match in matches:
-            object_value = pydash.get(replacements, match)
-            replace_tags(str(f"<PT {match} >"), str(object_value), paragraph)
+def replace_txt(document, paragraph, replacements):
+    
+    pattern = r'\<PT (.*?) \>'
+    matches = get_tag_content(pattern, paragraph)
+    for match in matches:
+        object_value = pydash.get(replacements, match)
+        replace_tags(str(f"<PT {match} >"), str(object_value), paragraph)
 
     for section in document.sections:
         footer = section.footer
